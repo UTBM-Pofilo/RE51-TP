@@ -1,0 +1,11 @@
+Le coût en nombre de messages est le même quelques soit la méthode 
+de parcours. 
+De plus il reste identique même après un nombre important de tests.
+
+Cependant, le temps de parcours est bien plus long pour le parcours en profondeur. 
+Cela vient du fait qu'il n'y ait jamais 2 messages échangés simultanément pendant le parcours. 
+
+En revanche, à chaque exécution de l'un des 2 programmes, l'arbre de recouvrement change. Cela 
+est dû au fait que le choix du prochain voisin se fait via une variable aléatoire. 
+
+Le choix du parcours en profondeur ou en largeur est pour la plupart du temps possible, mais il faut quand même réfléchir en fonction de l'application.
