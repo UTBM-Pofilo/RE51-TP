@@ -1,0 +1,33 @@
+vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP2/profondeur$ mpirun -hostfile ../hosts -np 6 profondeur
+node 3 : start ! my neighbors : 1 
+node 5 : start ! my neighbors : 2 4 
+node 2 : start ! my neighbors : 0 1 4 5 
+node 0 : start ! my neighbors : 1 2 
+******************start algorithm***********************
+node 1 : start ! my neighbors : 0 2 3 
+Master 0 : send tag : forward, to node 2
+node 4 : start ! my neighbors : 2 5 
+node 2 : my neighbors : 1 4 5 
+node 2 : send tag : forward, to node 4
+node 4 : my neighbors : 5 
+node 4 : send tag : forward, to node 5
+node 5 : my neighbors : 2 
+node 5 : send tag : forward, to node 2
+node 2 : send tag : return, to node 5
+node 5 : send tag : return, to node 4
+node 5 : end of work
+node 4 : send tag : return, to node 2
+node 4 : end of work
+node 2 : send tag : forward, to node 1
+node 1 : my neighbors : 0 3 
+node 1 : send tag : forward, to node 3
+node 3 : send tag : return, to node 1
+node 3 : end of work
+node 1 : send tag : forward, to node 0
+node 0 : send tag : return, to node 1
+node 1 : send tag : return, to node 2
+node 1 : end of work
+node 2 : send tag : return, to node 0
+node 2 : end of work
+Master : End of programm !
+node 0 : end of work

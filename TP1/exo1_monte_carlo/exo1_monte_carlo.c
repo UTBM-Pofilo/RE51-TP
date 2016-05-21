@@ -12,7 +12,6 @@ int main(int argc, char** argv){
     }
  
     int niter = atoi(argv[1]);
-    printf("nb_iteration asked: %d", niter);
     int count =0, mycount;
     int myid, numprocs, proc;
     MPI_Status status;
@@ -21,6 +20,7 @@ int main(int argc, char** argv){
      
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
  
     srand(time(NULL));
     int i;
@@ -42,7 +42,7 @@ int main(int argc, char** argv){
         }
         // the main process calculate the value of pi
         double pi = (double)count/(niter*numprocs)*4;
-        printf("nb essais= %d , estimation de Pi %g \n", niter*numprocs, pi);
+        printf("nb essais= %d, estimation de Pi %g \n", niter*numprocs, pi);
     } else {
         printf("Processor %d sending results = %d to master process\n", myid, mycount);
         MPI_Send(&mycount, 1, MPI_REAL, master, tag, MPI_COMM_WORLD);
@@ -51,3 +51,4 @@ int main(int argc, char** argv){
     MPI_Finalize();
     return 0;
 } 
+ 

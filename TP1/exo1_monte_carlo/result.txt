@@ -1,0 +1,8 @@
+vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP1/exo1_monte_carlo$ mpirun -hostfile ../hosts -np 6 exo1_monte_carlo 100000000
+Processor 4 sending results = 78571314 to master process
+Processor 1 sending results = 78571241 to master process
+Processor 2 sending results = 78571251 to master process
+Processor 3 sending results = 78571220 to master process
+Processor 5 sending results = 78571371 to master process
+nb essais= 600000000, estimation de Pi 3.14285 
+ 

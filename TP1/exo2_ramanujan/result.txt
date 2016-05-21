@@ -1,0 +1,44 @@
+vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP1/exo2_ramanujan$ mpirun -hostfile ../hosts -np 5 exo2_ramanujan 10
+send first work number:0 to process 1
+send first work number:1 to process 2
+send first work number:2 to process 3
+send first work number:3 to process 4
+Child 2: receive value:1
+Child 2: send my computation 0.000027
+Master: received result_n = 0.000027 and send value : 4 to child 2
+Child 2: receive value:4
+Child 2: send my computation 0.000000
+Master: received result_n = 0.000000 and send value : 5 to child 2
+Child 2: receive value:5
+Child 2: send my computation 0.000000
+Master: received result_n = 0.000000 and send value : 6 to child 2
+Child 2: receive value:6
+Child 2: send my computation -0.000000
+Master: received result_n = -0.000000 and send value : 7 to child 2
+Child 2: receive value:7
+Child 2: send my computation -0.000000
+Master: received result_n = -0.000000 and send value : 8 to child 2
+Child 2: receive value:8
+Child 2: send my computation -0.000000
+Master: received result_n = -0.000000 and send value : 9 to child 2
+
+Queue empty
+end while - count = 0.000027
+Child 2: receive value:9
+Child 2: send my computation 0.000000
+Child 4: receive value:3
+Child 3: receive value:2
+Child 1: receive value:0
+Child 1: send my computation 1103.000000
+Child 3: send my computation 0.000000
+Child 4: send my computation 0.000000
+Master: I send something
+Master: I send something
+ process 1 : I stop
+Master: I send something
+ process 2 : I stop
+Master: I send something
+pi = 3.141593
+ process 4 : I stop
+ process 3 : I stop
+ 

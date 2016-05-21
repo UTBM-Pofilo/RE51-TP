@@ -1,0 +1,36 @@
+vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP2/largeur$ mpirun -hostfile ../hosts -np 6 largeur
+node 1 : start ! my neighbors : 0 2 3 
+node 3 : start ! my neighbors : 1 
+node 5 : start ! my neighbors : 2 4 
+node 4 : start ! my neighbors : 2 5 
+node 0 : start ! my neighbors : 1 2 
+node 2 : start ! my neighbors : 0 1 4 5 
+******************start algorithm***********************
+Master 0 : send tag : forward, to node 1
+Master 0 : send tag : forward, to node 2
+node 2 receive message tag : forward from node 0
+node 1 receive message tag : forward from node 0
+node 2 : send tag : forward, to node 1
+node 2 : send tag : forward, to node 4
+node 1 : send tag : forward, to node 2
+node 1 : send tag : forward, to node 3
+node 2 : send tag : forward, to node 5
+node 4 receive message tag : forward from node 2
+node 1 receive message tag : forward from node 2
+node 3 receive message tag : forward from node 1
+node 3 : send tag : forward, to node 1 (my father)
+node 2 receive message tag : forward from node 1
+node 5 receive message tag : forward from node 2
+node 4 : send tag : forward, to node 5
+node 1 receive message tag : return from node 3
+node 0 receive message tag : return from node 1
+node 5 : send tag : forward, to node 4
+node 5 receive message tag : forward from node 4
+node 4 receive message tag : forward from node 5
+node 4 : send tag : forward, to node 2 (my father)
+node 5 : send tag : forward, to node 2 (my father)
+node 2 receive message tag : return from node 4
+node 2 receive message tag : return from node 5
+node 0 receive message tag : return from node 2
+Master : End of programm !
+ 
