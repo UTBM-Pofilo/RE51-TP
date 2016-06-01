@@ -14,16 +14,19 @@ int main(int argc, char ** argv) {
 	}
 	
 	int niter = atoi(argv[1]);
+
 	srand(time(NULL));
-	int count=0;
+	int count = 0;
 	int i;
-	for(i=0; i<niter; ++i) {
+	for(i = 0; i < niter; ++i) {
 		double x = (double)rand()/RAND_MAX;
 		double y = (double)rand()/RAND_MAX;
 		double z = x*x+y*y;
 		if (z<=1) ++count; /* Dans le cercle */
 	}
+
 	double pi = (double)count/niter*4;
 	printf("nb essais= %d , estimation de Pi %g \n",niter,pi);
+
 	return 0;
 }
