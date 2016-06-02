@@ -16,14 +16,19 @@ int main(int argc, char** argv){
 	int count = 0, count2;
 	int id, numprocs, proc;
 
+	// Structure used by the message 
 	MPI_Status status;
 	int master = 0;
-	int tag=123;
+	int tag = 123;
 
+	// Initialize the MPI execution environment
 	MPI_Init(&argc, &argv);
+	// Determines the size of the group associated with a communicator
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+	// Determines the rank of the calling process in the communicator
 	MPI_Comm_rank(MPI_COMM_WORLD, &id);
 
+	// Init the random function
 	srand(time(NULL));
 	int i;
 
@@ -39,6 +44,7 @@ int main(int argc, char** argv){
 		count = count2;
 		// the main process get the result of all processes
 		for(proc = 1; proc < numprocs; proc++){
+			// Blocking receive for a message
 			MPI_Recv(&count2, 1, MPI_REAL, proc, tag, MPI_COMM_WORLD, &status);
 			count += count2;
 		}
@@ -47,9 +53,11 @@ int main(int argc, char** argv){
 		printf("nb essais= %d, estimation de Pi %g \n", niter*numprocs, pi);
 	} else {
 		printf("slave %d sends %d to master\n", id, count2);
+		// Performs a blocking send
 		MPI_Send(&count2, 1, MPI_REAL, master, tag, MPI_COMM_WORLD);
 	}
 
+	// Terminates MPI execution environment
 	MPI_Finalize();
 
 	return 0;
