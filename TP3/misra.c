@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include <mpi.h>
 #include <unistd.h>
 
@@ -29,7 +30,7 @@ int *graph_edges;
 int graph_reorder = 1;
 
 // create the ring with the number of processes asked
-int create_ring(numprocs) {
+int create_ring(int numprocs) {
 	if(numprocs < graph_node_count){
 		return 1;
 	}

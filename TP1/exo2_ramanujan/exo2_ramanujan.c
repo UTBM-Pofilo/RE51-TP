@@ -4,6 +4,8 @@
 #include <string.h>
 #include <mpi.h>
 
+/*** WARNING --> Compile with option -lm ***/
+
 int *list = NULL;
 int head=0, tail=0;
 
@@ -30,10 +32,11 @@ int pop(){
 
 /* function for the calculus */
 long double factorial(int n){
+	long res;
 	if (n <= 0){
 		return 1;
 	} else {
-		long  res = n ;
+		res = n ;
 		while (--n > 1){
 			res *= n;
 		}
