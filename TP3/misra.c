@@ -1,3 +1,7 @@
+// tags corresponding to PING and PONG messages
+#define PING 301
+#define PONG 302
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,152 +9,155 @@
 #include <mpi.h>
 #include <unistd.h>
 
-int _rank, _numprocs, _ret;
+int rank, numprocs;
 
 int participated = 0;
 
-// tags corresponding to PING and PONG messages
-int ping = 301;
-int pong = 302;
-
-
-/* a communicator where the topology is defined */
+// The basic object used by MPI to determine which processes are involved in a communication
 MPI_Comm graph_comm;
 
+// Structure used by the message 
 MPI_Status status;
 
-/* number of nodes */
+// number of nodes
 int graph_node_count = 10;
-
-/* index definition */
+// index definition
 int *graph_index;
-
-/* edges definition */
+// edges definition
 int *graph_edges;
+// allows processes reordered for efficiency
+int graph_reorder = 1;
 
-int graph_reorder = 1; /* allows processes reordered for efficiency */
-
-
-/*** a function to create a ring depending on the number of processes ***/
-int create_ring(_numprocs) {
-	if(_numprocs<10){
+// create the ring with the number of processes asked
+int create_ring(numprocs) {
+	if(numprocs < graph_node_count){
 		return 1;
 	}
 
 	int i;
-	graph_node_count = _numprocs;
+	graph_node_count = numprocs;
 
-	graph_index = malloc(_numprocs * sizeof(int));
-	graph_edges = malloc(_numprocs * sizeof(int));
+	graph_index = malloc(numprocs * sizeof(int));
+	graph_edges = malloc(numprocs * sizeof(int));
 
-	for(i=0; i<_numprocs; i++){
-		graph_index[i]=i+1;
-		graph_edges[i]=(i+1)%_numprocs;
+	for(i = 0; i < numprocs; i++){
+		graph_index[i] = i + 1;
+		graph_edges[i] = (i + 1)%numprocs;
 	}
 
+	// Makes a new communicator to which topology information has been attached.
 	MPI_Graph_create(MPI_COMM_WORLD, graph_node_count, graph_index, graph_edges, graph_reorder, &graph_comm); 
 
 	return 0;
 }
 
 
-int lost_token(){
-	int result=0;
+int loose_token(){
+	int result = 0;
 
-	if((_rank==4 && participated ==2 )||(_rank==2 && participated==4)){
-		result=1;
+	if((rank == 4 && participated == 2)||(rank == 2 && participated == 4)){
+		result = 1;
 	}
+	
 	return result;
 }
 
 
 int main(int argc, char *argv[]) {
+	// Init the random function
 	srand(time(NULL));
 
+	// Initialize the MPI execution environment
 	MPI_Init(&argc, &argv);
-	MPI_Comm_size(MPI_COMM_WORLD, &_numprocs);
-	MPI_Comm_rank(MPI_COMM_WORLD,&_rank);
+	// Determines the size of the group associated with a communicator
+	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+	// Determines the rank of the calling process in the communicator
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	if(create_ring(_numprocs) != 0) {
-		printf("This program needs at least 10 nodes.\n");
+	if(create_ring(numprocs) != 0) {
+		printf("This program needs at least \"%d\" nodes.\n", graph_node_count);
 		return 1;
 	}
 
 	int running = 1;
-
-	//i iterator, participated counter, neighbors - tabs of my neighbors
 	int i, neighbor_count, *neighbors;
 
 	// counters
-	int nbPing=1;
-	int nbPong=-1;
+	int nbPing = 1;
+	int nbPong = -1;
 
-	int tmp=0;
-	int last_m=0;
+	int tmp = 0;
+	int last_m = 0;
 
-	/* define the ring topology */
-	MPI_Comm_rank(graph_comm, &_rank);       
+	// Determines the rank of the calling process in the communicator
+	MPI_Comm_rank(graph_comm, &rank);       
 
-	/* each process now its neighbors in one way */
-	MPI_Graph_neighbors_count(graph_comm, _rank, &neighbor_count);
+	// Returns the number of neighbors of a node associated with a graph topology
+	MPI_Graph_neighbors_count(graph_comm, rank, &neighbor_count);
 
 	neighbors = (int*) malloc (neighbor_count * sizeof(int));
-	MPI_Graph_neighbors(graph_comm, _rank, neighbor_count, neighbors);
+	// Returns the neighbors of a node associated with a graph topology
+	MPI_Graph_neighbors(graph_comm, rank, neighbor_count, neighbors);
 
-	if(_rank == 0){
-		MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], ping, graph_comm);
-		printf("[%f] master - send Ping\n", MPI_Wtime());
+	if(rank == 0){
+		// Performs a blocking send
+		MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], PING, graph_comm);
+		printf("master sends PING\n");
 		
-		MPI_Send(&nbPong, 1, MPI_INT, neighbors[0], pong, graph_comm);
-		printf("[%f] master - send Pong\n", MPI_Wtime());
+		// Performs a blocking send
+		MPI_Send(&nbPong, 1, MPI_INT, neighbors[0], PONG, graph_comm);
+		printf("master sends PONG\n");
 	}
 
 	while(running){
+		// Blocking receive for a message
 		MPI_Recv(&tmp, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, graph_comm, &status);
 
-		printf("[%f] node %d : receive %s from node %d\n", MPI_Wtime(), _rank, (status.MPI_TAG==ping)?"ping":(status.MPI_TAG==pong)?"pong":"unknow", status.MPI_SOURCE);
+		printf("node \"%d\" received \"%s\" from node \"%d\"\n", rank, (status.MPI_TAG==PING)?"PING":(status.MPI_TAG==PONG)?"PONG":"UNKNOWN", status.MPI_SOURCE);
 
-		//simulate a lost
+		// simulate a lost
 		participated++;
-		if(lost_token()){
+		if(loose_token()){
 			continue;
 		}
-		if(status.MPI_TAG==ping){
-			nbPing=tmp;
-			// printf("here -----------------1\n");
+		
+		if(status.MPI_TAG == PING){
+			nbPing = tmp;
 
-			if(last_m==nbPing){
+			if(last_m == nbPing){
 				nbPing++;
-				printf("[%f] PONG lost ! - regenerate it !\n", MPI_Wtime());
-				nbPong=-nbPing;
-				MPI_Send(&nbPong, 1, MPI_INT, neighbors[0], pong, graph_comm);
-			}else{
+				printf("PONG lost --> regenerate it\n");
+				nbPong =- nbPing;
+				// Performs a blocking send
+				MPI_Send(&nbPong, 1, MPI_INT, neighbors[0], PONG, graph_comm);
+			} else {
 				last_m = nbPing;
 			}
 
-			MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], ping, graph_comm);
-       
-		} else if(status.MPI_TAG==pong){
-            
-			nbPong=tmp;
-			//printf("here -------------------2\n");
-			if(last_m==nbPong){
+			// Performs a blocking send
+			MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], PING, graph_comm);
+		} else if(status.MPI_TAG == PONG){
+			nbPong = tmp;
+			
+			if(last_m == nbPong){
 				nbPong--;
-				printf("[%f] PING lost ! - regenerate it !\n", MPI_Wtime());
-				nbPing=-nbPong;
-				MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], ping, graph_comm);
+				printf("PING lost --> regenerate it\n");
+				nbPing =- nbPong;
+				// Performs a blocking send
+				MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], PING, graph_comm);
 			}else{
-				last_m=nbPong;
+				last_m = nbPong;
 			}
     
-			MPI_Send(&nbPong,1, MPI_INT, neighbors[0], pong, graph_comm);
-    
+			// Performs a blocking send
+			MPI_Send(&nbPong,1, MPI_INT, neighbors[0], PONG, graph_comm);
 		} else {
-			printf("unkown tag");	
+			printf("UNKNOWN tag");	
 		}
+		
 		sleep(1);
-	
 	}
 
+	// Terminates MPI execution environment
 	MPI_Finalize();
 }

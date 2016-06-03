@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 
-int rank, numprocs, ret;
+int rank, numprocs;
 
 // The basic object used by MPI to determine which processes are involved in a communication
 MPI_Comm graph_comm;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	if(create_graph() != 0) {
-		printf("This program needs %d nodes.\n", graph_node_count);
+		printf("This program needs \"%d\" nodes.\n", graph_node_count);
 		return 1;
 	}
 
