@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-#include "mpi.h"
+#include <mpi.h>
  
 int main(int argc, char** argv){
 

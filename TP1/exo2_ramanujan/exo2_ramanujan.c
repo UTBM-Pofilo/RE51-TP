@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include "mpi.h"
+#include <mpi.h>
 
 int *list = NULL;
 int head=0, tail=0;
