@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 		// Blocking receive for a message
 		MPI_Recv(&tmp, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, graph_comm, &status);
 
-		printf("node \"%d\" received \"%s\" from node \"%d\"\n", rank, (status.MPI_TAG==PING)?"PING":(status.MPI_TAG==PONG)?"PONG":"UNKNOWN", status.MPI_SOURCE);
+		printf("%f | node \"%d\" received \"%s\" from node \"%d\"\n", MPI_Wtime(), rank, (status.MPI_TAG==PING)?"PING":(status.MPI_TAG==PONG)?"PONG":"UNKNOWN", status.MPI_SOURCE);
 
 		// simulate a lost
 		participated++;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 
 			if(last_m == nbPing){
 				nbPing++;
-				printf("PONG lost --> regenerate it\n");
+				printf("%f | PONG lost --> regenerate it\n", MPI_Wtime());
 				nbPong =- nbPing;
 				// Performs a blocking send
 				MPI_Send(&nbPong, 1, MPI_INT, neighbors[0], PONG, graph_comm);
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 			
 			if(last_m == nbPong){
 				nbPong--;
-				printf("PING lost --> regenerate it\n");
+				printf("%f | PING lost --> regenerate it\n", MPI_Wtime());
 				nbPing =- nbPong;
 				// Performs a blocking send
 				MPI_Send(&nbPing, 1, MPI_INT, neighbors[0], PING, graph_comm);

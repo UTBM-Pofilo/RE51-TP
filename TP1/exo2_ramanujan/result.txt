@@ -1,44 +1,36 @@
-vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP1/exo2_ramanujan$ mpirun -hostfile ../hosts -np 5 exo2_ramanujan 10
-send first work number:0 to process 1
-send first work number:1 to process 2
-send first work number:2 to process 3
-send first work number:3 to process 4
-Child 2: receive value:1
-Child 2: send my computation 0.000027
-Master: received result_n = 0.000027 and send value : 4 to child 2
-Child 2: receive value:4
-Child 2: send my computation 0.000000
-Master: received result_n = 0.000000 and send value : 5 to child 2
-Child 2: receive value:5
-Child 2: send my computation 0.000000
-Master: received result_n = 0.000000 and send value : 6 to child 2
-Child 2: receive value:6
-Child 2: send my computation -0.000000
-Master: received result_n = -0.000000 and send value : 7 to child 2
-Child 2: receive value:7
-Child 2: send my computation -0.000000
-Master: received result_n = -0.000000 and send value : 8 to child 2
-Child 2: receive value:8
-Child 2: send my computation -0.000000
-Master: received result_n = -0.000000 and send value : 9 to child 2
-
-Queue empty
-end while - count = 0.000027
-Child 2: receive value:9
-Child 2: send my computation 0.000000
-Child 4: receive value:3
-Child 3: receive value:2
-Child 1: receive value:0
-Child 1: send my computation 1103.000000
-Child 3: send my computation 0.000000
-Child 4: send my computation 0.000000
-Master: I send something
-Master: I send something
- process 1 : I stop
-Master: I send something
- process 2 : I stop
-Master: I send something
-pi = 3.141593
- process 4 : I stop
- process 3 : I stop
- 
+vmerat@pc-gi-113:~/Bureau/RE51/TP_RE51/TP1/exo2_ramanujan$ mpirun -hostfile ../hosts -np 5 exo2_ramanujan 10
+send task "0" to process "1"
+child "1" received "0"
+child "1" sends "1103.000000"
+send task "1" to process "2"
+child "2" received "1"
+child "2" sends "0.000027"
+send task "2" to process "3"
+child "3" received "2"
+child "3" sends "0.000000"
+send task "3" to process "4"
+child "4" received "3"
+child "4" sends "0.000000"
+child "1" received "4"
+child "1" sends "0.000000"
+master received result_n "1103.000000" and send value "4" to child "1"
+child "2" received "5"
+master received result_n "0.000027" and send value "5" to child "2"
+master received result_n "0.000000" and send value "6" to child "3"
+child "3" received "6"
+child "3" sends "-0.000000"
+master received result_n "0.000000" and send value "7" to child "4"
+master received result_n "0.000000" and send value "8" to child "1"
+master received result_n "-0.000000" and send value "9" to child "3"
+list empty
+child "4" received "7"
+child "4" sends "-0.000000"
+child "3" received "9"
+child "3" sends "0.000000"
+child "1" received "8"
+child "1" sends "-0.000000"
+process "3" finished
+process "1" finished
+--> pi = "3.141593"
+child "2" sends "0.000000"
+process "4" finished

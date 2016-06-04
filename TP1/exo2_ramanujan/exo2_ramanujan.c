@@ -20,7 +20,7 @@ void push(int token){
 int pop(){
 	int t;
 	if(head == tail) {
-		printf("\nlist empty");
+		printf("list empty\n");
 		return 0;
 	}
 	
@@ -131,7 +131,7 @@ int main(int argc, char** argv){
 			MPI_Recv(&count2, 1, MPI_INT, master,MPI_ANY_TAG, MPI_COMM_WORLD, &status);
 
 			if(status.MPI_TAG == tag_end){
-				printf(" process \"%d\" finished\n", id);
+				printf("process \"%d\" finished\n", id);
 				break;
 			} else {
 				printf("child \"%d\" received \"%d\"\n", id, count2);

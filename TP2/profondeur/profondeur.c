@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 	// Returns the neighbors of a node associated with a graph topology
 	MPI_Graph_neighbors(graph_comm, rank, neighbor_count, neighbors);
 
-	printf("node \"%d\" starts, his neighbors are ", rank);
+	printf("%f | node \"%d\" starts, his neighbors are ", MPI_Wtime(), rank);
 	
 	for(i = 0; i < neighbor_count; i++){
 		printf("\"%d\" ", neighbors[i]);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 	if(rank == 0){
 		participated = 1;
 		next_recv=pick_recv(neighbors, neighbor_count);
-		printf("Master \"%d\" sends \"FORWARD\" to node \"%d\"\n", rank, neighbors[i]);
+		printf("%f | Master \"%d\" sends \"FORWARD\" to node \"%d\"\n", MPI_Wtime(), rank, neighbors[i]);
 		// Performs a blocking send
 		MPI_Send(NULL, 0, MPI_INT, next_recv, FORWARD, graph_comm);
 	}
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(NULL, 0, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, graph_comm, &status);
 
 		// seeing all received messages 
-		printf("node \"%d\" received \"%s\" from node \"%d\"\n", rank, (status.MPI_TAG==FORWARD?"FORWARD":"RETURN"), status.MPI_SOURCE);
+		printf("%f | node \"%d\" received \"%s\" from node \"%d\"\n", MPI_Wtime(), rank, (status.MPI_TAG==FORWARD?"FORWARD":"RETURN"), status.MPI_SOURCE);
 		
 		switch((int)status.MPI_TAG){
 			case FORWARD:
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 					father = status.MPI_SOURCE;
 					participated = 1;
  
-					printf("node \"%d\", my neighbors ", rank);
+					printf("%f | node \"%d\", my neighbors ", MPI_Wtime(), rank);
 					
 					for(i = 0; i < neighbor_count; i++){
 						printf("\"%d\" ", neighbors[i]);
@@ -133,11 +133,11 @@ int main(int argc, char *argv[]) {
 					printf("\n");
 
 					next_recv = pick_recv(neighbors, neighbor_count);
-					printf("node \"%d\" sends \"FORWARD\" to node \"%d\"\n", rank, next_recv);
+					printf("%f | node \"%d\" sends \"FORWARD\" to node \"%d\"\n", MPI_Wtime(), rank, next_recv);
 					// Performs a blocking send
 					MPI_Send(NULL, 0, MPI_INT, next_recv, FORWARD, graph_comm);
 				} else {
-					printf("node \"%d\" sends \"RETURN\" to node \"%d\"\n", rank, status.MPI_SOURCE);
+					printf("%f | node \"%d\" sends \"RETURN\" to node \"%d\"\n", MPI_Wtime(), rank, status.MPI_SOURCE);
 					// Performs a blocking send
 					MPI_Send(NULL, 0, MPI_INT, status.MPI_SOURCE, END_RETURN, graph_comm);
 					if(participated == 0){
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 					if(father == -1){
 						printf("Master --> end of program\n");
 					} else {
-						printf("node \"%d\" sends \"RETURN\" to node \"%d\"\n", rank, father);
+						printf("%f | node \"%d\" sends \"RETURN\" to node \"%d\"\n", MPI_Wtime(), rank, father);
 						// Performs a blocking send
 						MPI_Send(NULL, 0, MPI_INT, father, END_RETURN, graph_comm);
 					}
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 					running = 0;
 				} else {
 					next_recv = pick_recv(neighbors, neighbor_count);
-					printf("node \"%d\" sends \"FORWARD\" to node %d\n", rank, next_recv);
+					printf("%f | node \"%d\" sends \"FORWARD\" to node %d\n", MPI_Wtime(), rank, next_recv);
 					// Performs a blocking send
 					MPI_Send(NULL, 0, MPI_INT, next_recv, FORWARD, graph_comm);
 				}
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	printf("node \"%d\" --> end of task\n", rank);
+	printf("%f | node \"%d\" --> end of task\n", MPI_Wtime(), rank);
 
 	// Terminates MPI execution environment
 	MPI_Finalize();

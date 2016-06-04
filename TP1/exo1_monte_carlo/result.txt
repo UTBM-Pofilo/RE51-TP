@@ -1,8 +1,7 @@
-vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP1/exo1_monte_carlo$ mpirun -hostfile ../hosts -np 6 exo1_monte_carlo 100000000
-Processor 4 sending results = 78571314 to master process
-Processor 1 sending results = 78571241 to master process
-Processor 2 sending results = 78571251 to master process
-Processor 3 sending results = 78571220 to master process
-Processor 5 sending results = 78571371 to master process
-nb essais= 600000000, estimation de Pi 3.14285 
- 
+vmerat@pc-gi-113:~/Bureau/RE51/TP_RE51/TP1/exo1_monte_carlo$ mpirun -hostfile ../hosts -np 6 exo1_monte_carlo 100000000
+slave "3" sends "78580271" to master
+slave "4" sends "78580494" to master
+slave "2" sends "78580302" to master
+slave "5" sends "78580490" to master
+slave "1" sends "78580438" to master
+nb essais: "600000000", estimation de Pi "3.14322" 

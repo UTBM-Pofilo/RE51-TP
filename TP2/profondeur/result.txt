@@ -1,33 +1,47 @@
-vmerat@pc-gi-107:~/Bureau/RE51/TP_RE51/TP2/profondeur$ mpirun -hostfile ../hosts -np 6 profondeur
-node 3 : start ! my neighbors : 1 
-node 5 : start ! my neighbors : 2 4 
-node 2 : start ! my neighbors : 0 1 4 5 
-node 0 : start ! my neighbors : 1 2 
-******************start algorithm***********************
-node 1 : start ! my neighbors : 0 2 3 
-Master 0 : send tag : forward, to node 2
-node 4 : start ! my neighbors : 2 5 
-node 2 : my neighbors : 1 4 5 
-node 2 : send tag : forward, to node 4
-node 4 : my neighbors : 5 
-node 4 : send tag : forward, to node 5
-node 5 : my neighbors : 2 
-node 5 : send tag : forward, to node 2
-node 2 : send tag : return, to node 5
-node 5 : send tag : return, to node 4
-node 5 : end of work
-node 4 : send tag : return, to node 2
-node 4 : end of work
-node 2 : send tag : forward, to node 1
-node 1 : my neighbors : 0 3 
-node 1 : send tag : forward, to node 3
-node 3 : send tag : return, to node 1
-node 3 : end of work
-node 1 : send tag : forward, to node 0
-node 0 : send tag : return, to node 1
-node 1 : send tag : return, to node 2
-node 1 : end of work
-node 2 : send tag : return, to node 0
-node 2 : end of work
-Master : End of programm !
-node 0 : end of work
+vmerat@pc-gi-113:~/Bureau/RE51/TP_RE51/TP2/profondeur$ cat result.txt | sort
+1465022553.276436 | node "0" starts, his neighbors are "1" "2" 
+1465022553.276437 | node "1" starts, his neighbors are "0" "2" "3" 
+1465022553.276437 | node "3" starts, his neighbors are "1" 
+1465022553.276440 | node "2" starts, his neighbors are "0" "1" "4" "5" 
+1465022553.276507 | node "4" starts, his neighbors are "2" "5" 
+1465022553.276508 | node "5" starts, his neighbors are "2" "4" 
+1465022553.276903 | Master "0" sends "FORWARD" to node "1"
+1465022553.277002 | node "1" received "FORWARD" from node "0"
+1465022553.277020 | node "1", my neighbors "2" "3" 
+1465022553.277031 | node "1" sends "FORWARD" to node "2"
+1465022553.277061 | node "2" received "FORWARD" from node "1"
+1465022553.277076 | node "2", my neighbors "0" "4" "5" 
+1465022553.277087 | node "2" sends "FORWARD" to node "5"
+1465022553.277118 | node "5" received "FORWARD" from node "2"
+1465022553.277131 | node "5", my neighbors "4" 
+1465022553.277143 | node "5" sends "FORWARD" to node "4"
+1465022553.277157 | node "4" received "FORWARD" from node "5"
+1465022553.277169 | node "4", my neighbors "2" 
+1465022553.277179 | node "4" sends "FORWARD" to node "2"
+1465022553.277209 | node "2" received "FORWARD" from node "4"
+1465022553.277220 | node "2" sends "RETURN" to node "4"
+1465022553.277237 | node "4" received "RETURN" from node "2"
+1465022553.277247 | node "4" sends "RETURN" to node "5"
+1465022553.277270 | node "4" --> end of task
+1465022553.277273 | node "5" received "RETURN" from node "4"
+1465022553.277284 | node "5" sends "RETURN" to node "2"
+1465022553.277293 | node "5" --> end of task
+1465022553.277341 | node "2" received "RETURN" from node "5"
+1465022553.277355 | node "2" sends "FORWARD" to node 0
+1465022553.278133 | node "0" received "FORWARD" from node "2"
+1465022553.278234 | node "0" sends "RETURN" to node "2"
+1465022553.278330 | node "2" received "RETURN" from node "0"
+1465022553.278348 | node "2" sends "RETURN" to node "1"
+1465022553.278357 | node "2" --> end of task
+1465022553.278361 | node "1" received "RETURN" from node "2"
+1465022553.278373 | node "1" sends "FORWARD" to node 3
+1465022553.278384 | node "3" received "FORWARD" from node "1"
+1465022553.278400 | node "3" sends "RETURN" to node "1"
+1465022553.278413 | node "1" received "RETURN" from node "3"
+1465022553.278413 | node "3" --> end of task
+1465022553.278421 | node "1" sends "RETURN" to node "0"
+1465022553.278430 | node "1" --> end of task
+1465022553.278535 | node "0" received "RETURN" from node "1"
+1465022553.278557 | node "0" --> end of task
+Master --> end of program
+# vmerat@pc-gi-113:~/Bureau/RE51/TP_RE51/TP2/profondeur$ mpirun -hostfile ../hosts -np 6 profondeur

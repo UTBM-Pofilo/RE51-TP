@@ -50,9 +50,9 @@ int main(int argc, char** argv){
 		}
 		// the main process calculate the value of pi
 		double pi = (double)count/(niter*numprocs)*4;
-		printf("nb essais= %d, estimation de Pi %g \n", niter*numprocs, pi);
+		printf("nb essais: \"%d\", estimation de Pi \"%g\" \n", niter*numprocs, pi);
 	} else {
-		printf("slave %d sends %d to master\n", id, count2);
+		printf("slave \"%d\" sends \"%d\" to master\n", id, count2);
 		// Performs a blocking send
 		MPI_Send(&count2, 1, MPI_REAL, master, tag, MPI_COMM_WORLD);
 	}
